@@ -1,5 +1,6 @@
 package ru.netology.manager;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.netology.domain.Book;
@@ -7,89 +8,36 @@ import ru.netology.domain.Product;
 import ru.netology.domain.Smartphone;
 import ru.netology.repository.ProductRepository;
 
-import static org.junit.jupiter.api.Assertions.*;
+public class ProductManagerTest {
 
-class ProductManagerTest {
-    private ProductRepository repository = new ProductRepository();
-    private ProductManager manager = new ProductManager(repository);
+    ProductRepository repo = new ProductRepository();
+    ProductManager manager = new ProductManager(repo);
 
-    Product product1 = new Book(1, "One", 100, "AOne");
-    Product product2 = new Book(2, "Second", 200, "ASecond");
-    Product product3 = new Book(3, "Third", 300, "AThird");
-    Product product4 = new Book(4, "Fourth", 400, "AFourth");
-    Product product5 = new Book(5, "Fifth", 500, "AFifth");
-    Product product6 = new Smartphone(6, "Sixth", 600, "MSixth");
-    Product product7 = new Smartphone(7, "Seventh", 700, "MSeventh");
-    Product product8 = new Smartphone(8, "Eighth", 800, "MEighth");
-    Product product9 = new Smartphone(9, "Ninth", 900, "MNinth");
-    Product product10 = new Smartphone(10, "Tenth", 1000, "MTenth");
+    Book product1 = new Book(1, "Horror1", 700, "Hell666");
+    Book product2 = new Book(2, "Horror2", 900, "Hell777");
+    Smartphone product3 = new Smartphone(3, "Iphone11", 40_000, "Apple");
+    Smartphone product4 = new Smartphone(4, "GalaxyA", 20_000, "Samsung");
+
 
     @BeforeEach
-    void setUp() {
-        manager.addProduct(product1);
-        manager.addProduct(product2);
-        manager.addProduct(product3);
-        manager.addProduct(product4);
-        manager.addProduct(product5);
-        manager.addProduct(product6);
-        manager.addProduct(product7);
-        manager.addProduct(product8);
-        manager.addProduct(product9);
-        manager.addProduct(product10);
-
+    public void setup() {
+        manager.add(product1);
+        manager.add(product2);
+        manager.add(product3);
+        manager.add(product4);
     }
 
     @Test
-    void searchByMakerBook() {
-        Product[] actual = manager.searchBy("AOne");
-        Product[] expected = {new Book(1, "One", 100, "AOne")};
-        assertArrayEquals(expected, actual);
+    public void shouldSearchByName() {
+        Product[] expected = {product1, product2};
+        Product[] actual = manager.searchBy("Horror");
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
-    void searchByMakerSmartphone() {
-        Product[] actual = manager.searchBy("MSixth");
-        Product[] expected = {new Smartphone(6, "Sixth", 600, "MSixth")};
-        assertArrayEquals(expected, actual);
-    }
-
-    @Test
-    void searchBySmartphoneName() {
-        Product[] actual = manager.searchBy("Sixth");
-        Product[] expected = {new Smartphone(6, "Sixth", 600, "MSixth")};
-        assertArrayEquals(expected, actual);
-
-    }
-
-    @Test
-    void searchByBookName() {
-        Product[] actual = manager.searchBy("Second");
-        Product[] expected = {new Book(2, "Second", 200, "ASecond")};
-        assertArrayEquals(expected, actual);
-
-    }
-
-    @Test
-    void shouldRemoveById() {
-        repository.removeById(7);
-        Product[] actual = repository.findAll();
-        Product[] expected = new Product[]{product1, product2, product3, product4, product5, product6, product8, product9, product10};
-        assertArrayEquals(expected, actual);
-    }
-
-    @Test
-    void searchByInvalidMaker() {
-        Product[] actual = manager.searchBy("MEleventh");
+    public void shouldSearchByNameWithoutCompliance() {
         Product[] expected = {};
-        assertArrayEquals(expected, actual);
+        Product[] actual = manager.searchBy("Tree");
+        Assertions.assertArrayEquals(expected, actual);
     }
-
-    @Test
-    void searchByInvalidAuthor() {
-        Product[] actual = manager.searchBy("ASixth");
-        Product[] expected = {};
-        assertArrayEquals(expected, actual);
-
-    }
-
 }
